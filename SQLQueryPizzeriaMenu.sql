@@ -104,6 +104,10 @@ END
 --EXECUTE [AssegnazioneIngredientePizza] @CodicePizza = 11, @CodiceIngrediente = 1
 --EXECUTE [AssegnazioneIngredientePizza] @CodicePizza = 11, @CodiceIngrediente = 3
 
+--EXECUTE [AssegnazioneIngredientePizza] @CodicePizza = 21, @CodiceIngrediente = 2
+--EXECUTE [AssegnazioneIngredientePizza] @CodicePizza = 21, @CodiceIngrediente = 24
+--EXECUTE [AssegnazioneIngredientePizza] @CodicePizza = 21, @CodiceIngrediente = 12
+
 SELECT * FROM PizzaIngrediente
 
 CREATE PROCEDURE [EliminazioneIngredientePizza] @CodicePizza INT, @CodiceIngrediente INT
@@ -240,18 +244,19 @@ END
 SELECT  dbo.Calcolo_Ingredienti(12) as value
 
 --view
-CREATE VIEW [MenuCompleto] AS (
-	SELECT p.Nome, p.Prezzo, i.Nome as Nome_ingrediente, i.Costo
+CREATE VIEW [MenuCompleto2] AS (
+	SELECT p.Nome, p.Prezzo, STRING_AGG(i.Nome, ',') as Ingredienti
 	FROM Pizza as p
 	left JOIN PizzaIngrediente as pi
 	ON p.Codice = pi.CodicePizza
 	left JOIN Ingrediente AS i
 	ON pi.CodiceIngrediente = i.Codice
+	group by p.Nome, p.Prezzo
 );
 
---ho usato 'left join' perché non tutte le pizze hanno ingredienti associati per il momento
 
 SELECT * 
-FROM MenuCompleto
+FROM MenuCompleto2
+
 
 
